@@ -2,6 +2,15 @@ import { BASE_URL } from "../constants/apiEndpoints";
 import { checkResponse } from "./weatherApi";
 import { getToken } from "../utils/token";
 
+// Forgot password (unauthenticated)
+export const forgotPassword = (email) => {
+  return fetch(`${BASE_URL}/users/me`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  }).then(checkResponse);
+};
+
 //Private
 export const getCurrentUser = () => {
   return fetch(`${BASE_URL}/users/me`, {

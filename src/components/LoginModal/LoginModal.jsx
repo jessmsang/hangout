@@ -79,6 +79,15 @@ function LoginModal({ onClose, isOpen, setActiveModal }) {
           {errorMessage.password}
         </span>
       </label>
+
+      <button
+        type="button"
+        className="modal__forgot-password-btn"
+        onClick={() => setActiveModal("forgot-password-modal")}
+      >
+        Forgot password?
+      </button>
+
       {errorMessage.general && (
         <span className="modal__error modal__error_general">
           {errorMessage.general}

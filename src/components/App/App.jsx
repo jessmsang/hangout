@@ -14,6 +14,7 @@ import MyActivities from "../MyActivities/MyActivities";
 import AddActivityFormModal from "../AddActivityFormModal/AddActivityFormModal";
 import RegisterModal from "../RegisterModal/RegisterModal";
 import LoginModal from "../LoginModal/LoginModal";
+import ForgotPasswordModal from "../ForgotPasswordModal/ForgotPasswordModal";
 import EditProfileModal from "../EditProfileModal/EditProfileModal";
 import ChangePasswordModal from "../ChangePasswordModal/ChangePasswordModal";
 import DeleteConfirmationModal from "../DeleteConfirmationModal/DeleteConfirmationModal";
@@ -79,7 +80,7 @@ export default function App() {
 
   const savedActivities = activities.filter((activity) => activity.isSaved);
   const completedActivities = activities.filter(
-    (activity) => activity.isCompleted
+    (activity) => activity.isCompleted,
   );
 
   // --- AUTHENTICATION ---
@@ -128,13 +129,13 @@ export default function App() {
             ...activity,
             isSaved:
               currentUser.savedActivities?.some(
-                (saved) => saved._id === activity._id
+                (saved) => saved._id === activity._id,
               ) ?? false,
             isCompleted:
               currentUser.completedActivities?.some(
-                (completed) => completed._id === activity._id
+                (completed) => completed._id === activity._id,
               ) ?? false,
-          }))
+          })),
         );
       })
       .catch(console.error)
@@ -400,6 +401,31 @@ export default function App() {
     return handleSubmit(makeRequest);
   };
 
+  const handleForgotPassword = (email, setErrorMessage, setMessage) => {
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setErrorMessage("Please enter a valid email address.");
+      return Promise.reject(new Error("Invalid email format"));
+    }
+
+    setErrorMessage("");
+    setMessage("");
+
+    const makeRequest = () => usersApi.forgotPassword(email);
+
+    return handleSubmit(makeRequest)
+      .then(() => {
+        setMessage(
+          "If an account with that email exists, you'll receive a reset link.",
+        );
+      })
+      .catch(() => {
+        // Always show the same message to avoid exposing which emails exist
+        setMessage(
+          "If an account with that email exists, you'll receive a reset link.",
+        );
+      });
+  };
+
   const handleDeleteAccount = () => {
     const makeRequest = () =>
       usersApi.deleteUser(currentUser._id).then(() => {
@@ -453,6 +479,7 @@ export default function App() {
               handleUpdateProfile,
               handleDeleteAccount,
               handleUpdatePassword,
+              handleForgotPassword,
               savedActivities,
               completedActivities,
             }}
@@ -515,6 +542,10 @@ export default function App() {
                         onClose={closeActiveModal}
                         activeModal={activeModal}
                         setActiveModal={setActiveModal}
+                      />
+                      <ForgotPasswordModal
+                        isOpen={activeModal === "forgot-password-modal"}
+                        onClose={closeActiveModal}
                       />
                       <EditProfileModal
                         isOpen={activeModal === "edit-profile"}

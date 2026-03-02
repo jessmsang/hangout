@@ -10,7 +10,9 @@
   align-items: center;
   visibility: hidden;
   opacity: 0;
-  transition: visibility 0s linear 0.3s, opacity 0.3s linear;
+  transition:
+    visibility 0s linear 0.3s,
+    opacity 0.3s linear;
   z-index: 998;
 }
 
@@ -23,7 +25,9 @@
 .modal__container {
   transform: translateY(-8px);
   opacity: 0;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
   gap: 0.7rem;
 }
 
@@ -140,7 +144,7 @@
   color: #3c2d01be;
   margin: 0.1rem 0 0 0;
   width: 100%;
-  padding: 0.3rem 0;
+  padding: 0.4rem 0;
   border: none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.6);
   box-sizing: border-box;
@@ -188,6 +192,22 @@
   justify-content: center;
   align-items: center;
   margin: 0.5rem 0 0;
+  gap: 0.6rem;
+}
+
+.modal__btn-wrapper_login {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0;
+  gap: 0.6rem;
+}
+
+.modal__btn-wrapper_forgot-password {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0;
   gap: 0.6rem;
 }
 
@@ -241,6 +261,23 @@
   cursor: pointer;
 }
 
+.modal__forgot-password-btn {
+  background: none;
+  border: none;
+  color: #005abb;
+  text-decoration: underline;
+  font-size: 0.7rem;
+  margin-top: 4px;
+  cursor: pointer;
+  padding: 0;
+  align-self: flex-end;
+}
+
+.modal__forgot-password-btn:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
 .modal__cancel-btn {
   border-radius: 0.5rem;
   background: rgba(0, 0, 0, 0.6);
@@ -270,15 +307,23 @@
 }
 
 .modal__error {
-  color: #3c2d01;
+  color: #c10707;
   font-size: 0.7rem;
-  text-align: center;
+  text-align: left;
+  margin: 0.1rem;
 }
 
 .modal__error_general {
   color: #3c2d01;
   font-size: 0.7rem;
   text-align: center;
+}
+
+.modal__success {
+  color: #3c2d01;
+  font-size: 0.7rem;
+  text-align: left;
+  margin: 0;
 }
 
 @media screen and (max-width: 600px) {

@@ -30,7 +30,7 @@
   font-size: 0.9rem;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 655px) {
   .weather-display {
     border: none;
   }

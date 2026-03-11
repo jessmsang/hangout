@@ -1,4 +1,6 @@
 .page {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   min-height: 100vh;
   font-family: "Raleway", Arial, Helvetica, sans-serif;
@@ -14,4 +16,11 @@
   object-position: bottom;
   background-size: auto 100%;
   color: #f3f4f0;
+}
+
+.page__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
 }

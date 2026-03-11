@@ -101,7 +101,7 @@
   }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 655px) {
   .header {
     flex-direction: column;
     border: none;
@@ -122,6 +122,6 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 0.4rem;
+    padding: 0;
   }
 }

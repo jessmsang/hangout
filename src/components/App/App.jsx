@@ -10,6 +10,7 @@ import Main from "../Main/Main";
 import AddActivityButton from "../AddActivityButton/AddActivityButton";
 import Footer from "../Footer/Footer";
 import MyActivities from "../MyActivities/MyActivities";
+import ResetPasswordPage from "../ResetPasswordPage/ResetPasswordPage";
 
 import AddActivityFormModal from "../AddActivityFormModal/AddActivityFormModal";
 import RegisterModal from "../RegisterModal/RegisterModal";
@@ -72,6 +73,12 @@ export default function App() {
     variant: null,
     card: null,
   });
+  const [isMobileAuthorized, setIsMobileAuthorized] = useState(
+    window.innerWidth <= 600,
+  );
+  const [isMobileUnauthorized, setIsMobileUnauthorized] = useState(
+    window.innerWidth <= 655,
+  );
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
 
   const location = useLocation();
@@ -143,20 +150,6 @@ export default function App() {
   }, [currentUser]);
 
   // --- FETCH WEATHER ---
-  // useEffect(() => {
-  //   setIsLoading(true);
-  //   fetchCoordinatesByCity("Cincinnati", weatherAPIkey)
-  //     .then((coordinates) => getWeather(coordinates, weatherAPIkey))
-  //     .then((data) => {
-  //       const filteredData = filterWeatherData(data);
-  //       setWeatherData(filteredData);
-  //     })
-  //     .catch(console.error)
-  //     .finally(() => {
-  //       setIsLoading(false);
-  //     });
-  // }, []);
-
   useEffect(() => {
     setIsLoading(true);
 
@@ -187,12 +180,33 @@ export default function App() {
   // --- RESPONSIVE DESIGN ---
   useEffect(() => {
     const handleResize = () => {
+      setIsMobileAuthorized(window.innerWidth <= 600);
+      setIsMobileUnauthorized(window.innerWidth <= 655);
       setIsMobile(window.innerWidth <= 600);
     };
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // --- NAVIGATION ---
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const modal = params.get("modal");
+
+    if (modal === "login-modal") {
+      setActiveModal("login-modal");
+    }
+  }, [location.search]);
+
+  useEffect(() => {
+    if (location.state?.openModal) {
+      setActiveModal(location.state.openModal);
+
+      // clear the state so refreshing the page doesn't reopen the modal
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location, navigate]);
 
   // --- UI HANDLERS ---
 
@@ -412,17 +426,21 @@ export default function App() {
 
     const makeRequest = () => usersApi.forgotPassword(email);
 
-    return handleSubmit(makeRequest)
+    setIsLoading(true);
+
+    return makeRequest()
       .then(() => {
         setMessage(
           "If an account with that email exists, you'll receive a reset link.",
         );
       })
       .catch(() => {
-        // Always show the same message to avoid exposing which emails exist
         setMessage(
           "If an account with that email exists, you'll receive a reset link.",
         );
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -500,7 +518,8 @@ export default function App() {
                         onDeleteAccountClick={() =>
                           openDeleteConfirmationModal("account")
                         }
-                        isMobile={isMobile}
+                        isMobileAuthorized={isMobileAuthorized}
+                        isMobileUnauthorized={isMobileUnauthorized}
                         isMyActivitiesPage={isMyActivitiesPage}
                       />
 
@@ -514,7 +533,11 @@ export default function App() {
                               <MyActivities />
                             </ProtectedRoute>
                           }
-                        ></Route>
+                        />
+                        <Route
+                          path="/reset-password/:token"
+                          element={<ResetPasswordPage />}
+                        />
                       </Routes>
 
                       {isLoggedIn && activeModal !== "add-activity" && (
@@ -522,8 +545,6 @@ export default function App() {
                           onClick={() => openModal("add-activity")}
                         />
                       )}
-
-                      <Footer isMobile={isMobile} />
 
                       <AddActivityFormModal
                         isOpen={activeModal === "add-activity"}
@@ -581,6 +602,8 @@ export default function App() {
                           closeDeleteConfirmationModal();
                         }}
                       />
+
+                      <Footer isMobile={isMobile} />
                     </div>
                   </div>
                 </DeleteContext.Provider>

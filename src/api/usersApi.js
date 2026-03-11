@@ -4,7 +4,7 @@ import { getToken } from "../utils/token";
 
 // Forgot password (unauthenticated)
 export const forgotPassword = (email) => {
-  return fetch(`${BASE_URL}/users/me`, {
+  return fetch(`${BASE_URL}/users/forgot-password`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email }),
